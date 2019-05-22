@@ -17,8 +17,7 @@ FILE *f;
 
 struct Registro{
     int chave;
-    char nome[21];
-    int idade;
+    char nome[50];
 }Registro;
 
 char entrada;
@@ -88,34 +87,26 @@ int leRegistro(int jump){
 }
 
 void consultaChave(int chaveAux){
+    int cont = 1;
     leRegistro(hash1(chaveAux));
-        //printf("Nao foi possivel ler a posição da chave: %d",Registro.chave);
-        if (Registro.chave == chaveAux){
-            printf("chave: %d %s %d",Registro.chave, Registro.nome, Registro.idade);
-        }
-        else {
-
-            resolveColisaoConsulta(chaveAux);
-
-        }
+    if (Registro.chave == chaveAux){
+        printf("%d %s\n",Registro.chave, Registro.nome);
+        resolveColisaoConsulta(chaveAux);
+    }
+    else
+        resolveColisaoConsulta(chaveAux);
 }
 
 void resolveColisaoConsulta(int chaveAux){
     int conth2 = 1;
     leRegistro(( ((conth2 * hash2(chaveAux))+hash1(chaveAux)) % FSIZE ) ) ; //aqui é onde tratarei o arquivo em loop
-    while(Registro.chave != chaveAux){
+    while(conth2 < FSIZE){
         conth2++;
-        if (conth2 >= FSIZE)
-            break;
+        if (Registro.chave == chaveAux){
+            printf("%d %s\n",Registro.chave, Registro.nome);
+        }
         leRegistro(( ((conth2 * hash2(chaveAux))+hash1(chaveAux)) % FSIZE ) );
 
-    }
-    if (conth2 >= FSIZE){
-            printf("nao ha registro com chave: %d",chaveAux);
-    }
-    else{
-        //int aux = (conth2 * hash2(chaveAux))+hash1(chaveAux);
-        printf("chave: %d %s %d",Registro.chave, Registro.nome, Registro.idade);
     }
 }
 
@@ -127,11 +118,7 @@ void insereChave(){
                     escreveRegistro(hash1(Registro.chave));
                 }
                 else{
-                    /*if (Registro.chave == reg.chave) //caso esse registro teja a mesma chave do que esta para ser inserido ////////////////////////////////////////////////////////////////////
-                        printf("registro com chave existente");
-                    else{ //houve colisão*/
                         resolveColisaoInsercao();
-                    //}
                 }
 
             }
@@ -151,68 +138,47 @@ void resolveColisaoInsercao(){
             break;
         }
         else{
-            /*if (reg.chave == Registro.chave){ //isso aqui testa pra ver se ja existe o elemento a ser inserido em alguma posição ////////////////////////////////////////////////////////////////
-                flag=true;
-                break;
-            }*/
             conth2++;
             if (conth2 >= FSIZE)
                 break;
             leRegistro(( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE ));
         }
     }
-    /*if (flag){ //caso houve uma chave igual a ser inserida  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        printf("registro com chave existente");
-    }*/
-    //else if (!flag){ //podendo inserir
         int aux = ( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE );
-        //printf ("%d\n",aux); //TESTE IMPORTANTE PARA VER SE ESTA INSERINDO NA DEVIDA POSICAO
-        /*if (conth2 >= FSIZE){ //se o aux ja deu uma volta em todas as posições do arquivo //////////////////////////////////////////////////////////////////////////////////////////////////////
-            printf("arquivo cheio");
-        }*/
         Registro=reg;
         escreveRegistro(aux);
-    //}
 }
-
-void resolveColisaoRemocao(int chaveAux){ //igual ao resolveColisaoInsercao, mas com as instruções do flag no final modificadas.
-    int conth2 = 1;
-    bool flag = false;
-    leRegistro(( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE ) ) ;
-    while(Registro.chave != -1){
-        if (reg.chave == Registro.chave){ //isso aqui testa pra ver se ja existe o elemento a ser inserido em alguma posição
-            flag=true;
-            break;
-        }
-        conth2++;
-        if (conth2 >= FSIZE)
-            break;
-        leRegistro(( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE ));
-    }
-    if (flag){ //caso houve uma chave igual a ser inserida
-            Registro.chave = -2;
-            Registro.nome[0] = '\0';
-            Registro.idade = 0;
-            int aux = ( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE );
-            escreveRegistro(aux);
-    }
-    else if (!flag){ //podendo inserir
-        printf("nao existe registro com chave: %d",reg.chave);
-    }
-}
-
 
 void removeChave(int chaveAux){
         leRegistro(hash1(chaveAux));
         if (Registro.chave == chaveAux){
             Registro.chave = -2;
             Registro.nome[0] = '\0';
-            Registro.idade = 0;
             escreveRegistro(hash1(chaveAux));
+            resolveColisaoRemocao(chaveAux);
         }
         else {
-                resolveColisaoRemocao(chaveAux);
+            resolveColisaoRemocao(chaveAux);
         }
+}
+
+void resolveColisaoRemocao(int chaveAux){ //igual ao resolveColisaoInsercao, mas com as instruções do flag no final modificadas.
+    int conth2 = 1;
+    leRegistro(( ((conth2 * hash2(chaveAux))+hash1(chaveAux)) % FSIZE ) ) ;
+    while(Registro.chave != -1){
+        if (chaveAux == Registro.chave){
+            Registro.chave = -2;
+            Registro.nome[0] = '\0';
+            int aux = ( ((conth2 * hash2(chaveAux))+hash1(chaveAux)) % FSIZE );
+            escreveRegistro(aux);
+        }
+        conth2++;
+        if (conth2 >= FSIZE){
+            printf("assssd\n");
+            break;
+        }
+        leRegistro(( ((conth2 * hash2(chaveAux))+hash1(chaveAux)) % FSIZE ));
+    }
 }
 
 void printFile(){
@@ -229,7 +195,7 @@ void printFile(){
             printf ("Registro vazio\n");
         }
         else{
-            printf("Chave: %d;Nome: %s;Idade: %d;\n", Registro.chave, Registro.nome, Registro.idade);
+            printf("Chave: %d;Nome: %s;\n", Registro.chave, Registro.nome);
         }
     }
 
@@ -248,7 +214,6 @@ void InitFile(){
     for (x = 0; x < FSIZE; x++){
         Registro.chave = -1;
         Registro.nome[y] =  'a';
-        Registro.idade= 0;
         escreveRegistro(x);
     }
     fclose(f);
