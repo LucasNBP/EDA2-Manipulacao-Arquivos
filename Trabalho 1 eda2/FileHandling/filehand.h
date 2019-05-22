@@ -89,7 +89,7 @@ int leRegistro(int jump){
 
 void consultaChave(int chaveAux){
     leRegistro(hash1(chaveAux));
-        //printf("Nao foi possivel ler a posição da chave: %d",Registro.chave);
+        //printf("Nao foi possivel ler a posiÃ§Ã£o da chave: %d",Registro.chave);
         if (Registro.chave == chaveAux){
             printf("chave: %d %s %d",Registro.chave, Registro.nome, Registro.idade);
         }
@@ -102,7 +102,7 @@ void consultaChave(int chaveAux){
 
 void resolveColisaoConsulta(int chaveAux){
     int conth2 = 1;
-    leRegistro(( ((conth2 * hash2(chaveAux))+hash1(chaveAux)) % FSIZE ) ) ; //aqui é onde tratarei o arquivo em loop
+    leRegistro(( ((conth2 * hash2(chaveAux))+hash1(chaveAux)) % FSIZE ) ) ; //aqui Ã© onde tratarei o arquivo em loop
     while(Registro.chave != chaveAux){
         conth2++;
         if (conth2 >= FSIZE)
@@ -121,24 +121,23 @@ void resolveColisaoConsulta(int chaveAux){
 
 void insereChave(){
     if ( leRegistro(hash1(reg.chave)) ){
-            if ((Registro.chave != -1)){ //caso ja exista um registro na posição
+            if ((Registro.chave != -1)){ //caso ja exista um registro na posiÃ§Ã£o
                 if (Registro.chave == -2){
                     Registro = reg;
                     escreveRegistro(hash1(Registro.chave));
                 }
                 else{
-                    if (Registro.chave == reg.chave) //caso esse registro teja a mesma chave do que esta para ser inserido
+                    /*if (Registro.chave == reg.chave) //caso esse registro teja a mesma chave do que esta para ser inserido ////////////////////////////////////////////////////////////////////
                         printf("registro com chave existente");
-                    else{ //houve colisão
+                    else{ //houve colisÃ£o*/
                         resolveColisaoInsercao();
-                    }
+                    //}
                 }
 
             }
             else {
                 Registro = reg;
                 escreveRegistro(hash1(Registro.chave));
-
             }
     }
 }
@@ -152,36 +151,36 @@ void resolveColisaoInsercao(){
             break;
         }
         else{
-            if (reg.chave == Registro.chave){ //isso aqui testa pra ver se ja existe o elemento a ser inserido em alguma posição
+            /*if (reg.chave == Registro.chave){ //isso aqui testa pra ver se ja existe o elemento a ser inserido em alguma posiÃ§Ã£o ////////////////////////////////////////////////////////////////
                 flag=true;
                 break;
-            }
+            }*/
             conth2++;
             if (conth2 >= FSIZE)
                 break;
             leRegistro(( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE ));
         }
     }
-    if (flag){ //caso houve uma chave igual a ser inserida
+    /*if (flag){ //caso houve uma chave igual a ser inserida  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         printf("registro com chave existente");
-    }
-    else if (!flag){ //podendo inserir
+    }*/
+    //else if (!flag){ //podendo inserir
         int aux = ( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE );
         //printf ("%d\n",aux); //TESTE IMPORTANTE PARA VER SE ESTA INSERINDO NA DEVIDA POSICAO
-        /*if (conth2 >= FSIZE){ //se o aux ja deu uma volta em todas as posições do arquivo
+        /*if (conth2 >= FSIZE){ //se o aux ja deu uma volta em todas as posiÃ§Ãµes do arquivo //////////////////////////////////////////////////////////////////////////////////////////////////////
             printf("arquivo cheio");
         }*/
         Registro=reg;
         escreveRegistro(aux);
-    }
+    //}
 }
 
-void resolveColisaoRemocao(int chaveAux){ //igual ao resolveColisaoInsercao, mas com as instruções do flag no final modificadas.
+void resolveColisaoRemocao(int chaveAux){ //igual ao resolveColisaoInsercao, mas com as instruÃ§Ãµes do flag no final modificadas.
     int conth2 = 1;
     bool flag = false;
     leRegistro(( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE ) ) ;
     while(Registro.chave != -1){
-        if (reg.chave == Registro.chave){ //isso aqui testa pra ver se ja existe o elemento a ser inserido em alguma posição
+        if (reg.chave == Registro.chave){ //isso aqui testa pra ver se ja existe o elemento a ser inserido em alguma posiÃ§Ã£o
             flag=true;
             break;
         }
