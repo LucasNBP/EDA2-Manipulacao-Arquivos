@@ -65,7 +65,6 @@ int main(){
             }
             reg.nome[i]='\0';
 
-            scanf("%d", &reg.idade);
             //inserindo
             abreArquivo();
             if (!f){
