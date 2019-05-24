@@ -133,6 +133,9 @@ void resolveColisaoInsercao(){
     int conth2 = 1;
     bool flag = false;
     leRegistro(( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE ) ) ;
+    //if(((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE == hash1(reg.chave)){
+    //	return;
+ 	//}
     while(Registro.chave != -1){
         if (Registro.chave == -2){
             break;
@@ -140,13 +143,15 @@ void resolveColisaoInsercao(){
         else{
             conth2++;
             if (conth2 >= FSIZE)
-                break;
+            	break;
             leRegistro(( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE ));
         }
     }
+    if(conth2 < FSIZE){
         int aux = ( ((conth2 * hash2(reg.chave))+hash1(reg.chave)) % FSIZE );
         Registro=reg;
         escreveRegistro(aux);
+    }
 }
 
 void removeChave(int chaveAux){
@@ -174,7 +179,7 @@ void resolveColisaoRemocao(int chaveAux){ //igual ao resolveColisaoInsercao, mas
         }
         conth2++;
         if (conth2 >= FSIZE){
-            printf("assssd\n");
+            //printf("assssd\n");
             break;
         }
         leRegistro(( ((conth2 * hash2(chaveAux))+hash1(chaveAux)) % FSIZE ));
