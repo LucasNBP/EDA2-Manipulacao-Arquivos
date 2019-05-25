@@ -48,22 +48,34 @@ int main(){
                 printf("Erro ao abrir arquivo!\n\n");
                 exit(-1);
             }
-            scanf("%d", &chaveAux);
-            consultaChave(chaveAux);
+            fflush(stdin);
+            char buffer1[21];
+            fgets (buffer1, sizeof(buffer1), stdin);
+            if(buffer1[strlen(buffer1)-1] == '\n'){
+                buffer1[strlen(buffer1)-1] = '\0';
+            }
+            fflush(stdin);
+            consultaChave(buffer1);
             fclose(f);
         }
 
         if (entrada=='i'){
-            //struct Registro reg;
-            scanf("%d\n",&reg.chave);
-
-            int i=0;
-            for (i=0; i<=20; i++){
-                scanf("%c", &reg.nome[i]);
-                if (reg.nome[i] == '\n')
-                    break;
+            fflush(stdin);
+            char buffer1[21];
+            fgets (buffer1, sizeof(buffer1), stdin);
+            if(buffer1[strlen(buffer1)-1] == '\n'){
+                buffer1[strlen(buffer1)-1] = '\0';
             }
-            reg.nome[i]='\0';
+            strcpy(reg.chave, buffer1);
+            fflush(stdin);
+
+            char buffer2[51];
+            fgets (buffer2, sizeof(buffer2), stdin);
+            if(buffer2[strlen(buffer2)-1] == '\n'){
+                buffer2[strlen(buffer2)-1] = '\0';
+            }
+            strcpy(reg.nome, buffer2);
+            fflush(stdin);
 
             //inserindo
             abreArquivo();
@@ -86,8 +98,14 @@ int main(){
                 exit(-1);
             }
 
-            scanf("%d", &chaveAux);
-            removeChave(chaveAux);
+            fflush(stdin);
+            char buffer1[21];
+            fgets (buffer1, sizeof(buffer1), stdin);
+            if(buffer1[strlen(buffer1)-1] == '\n'){
+                buffer1[strlen(buffer1)-1] = '\0';
+            }
+            fflush(stdin);
+            removeChave(buffer1);
 
             fclose(f);
         }

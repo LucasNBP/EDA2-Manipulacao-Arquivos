@@ -16,8 +16,8 @@ using namespace std;
 FILE *f;
 
 struct Registro{
-    int chave;
-    char nome[50];
+    char chave[21];
+    char nome[51];
 }Registro;
 
 char entrada;
@@ -86,11 +86,12 @@ int leRegistro(int jump){
     return 0;
 }
 
-void consultaChave(int chaveAux){
+void consultaChave(char str[21]){
     int cont = 1;
+    int chaveAux = stringToInt(str);
     leRegistro(hash1(chaveAux));
     if (Registro.chave == chaveAux){
-        printf("%d %s\n",Registro.chave, Registro.nome);
+        printf("%s %s\n",Registro.chave, Registro.nome);
         resolveColisaoConsulta(chaveAux);
     }
     else
@@ -154,9 +155,10 @@ void resolveColisaoInsercao(){
     }
 }
 
-void removeChave(int chaveAux){
+void removeChave(char str[21]){
+        int chaveAux = stringToInt(str);
         leRegistro(hash1(chaveAux));
-        if (Registro.chave == chaveAux){
+        if (stringToInt(Registro.chave) == chaveAux){
             Registro.chave = -2;
             Registro.nome[0] = '\0';
             escreveRegistro(hash1(chaveAux));
@@ -222,4 +224,18 @@ void InitFile(){
         escreveRegistro(x);
     }
     fclose(f);
+}
+
+int stringToInt(char str[21]){
+    int key = 0;
+    int count = 0;
+    int potencia = 1;
+    while(1){
+        if(str[count] == '\0')
+            break;
+        key += ((int)str[count]) * pow(2, potencia);
+        count++;
+        potencia++;
+    }
+    return key;
 }
